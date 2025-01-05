@@ -3,40 +3,17 @@ namespace DorkFortress;
 public sealed class Cell
 {
     public Coord Coord { get; }
-    private readonly Cell? _cellBelow;
-    private Material _material;
+    public bool HasFloor { get; private set; }
 
-    private Cell(Coord coord, Cell? cellBelow)
+    private Cell(Coord coord, bool hasFloor)
     {
-        if (cellBelow is not null)
-        {
-            var expectedCoord = new Coord(coord.X, coord.Y, coord.Z - 1);
-            if (cellBelow.Coord != expectedCoord)
-            {
-                throw new ArgumentException($"Expected coordinate directly below: {expectedCoord}, but got {cellBelow.Coord}", nameof(cellBelow));
-            }
-        }
         Coord = coord;
-        _cellBelow = cellBelow;
+        HasFloor = hasFloor;
     }
 
-    internal static Cell CreateDefaultGround(Coord coord, Cell? cellBelow)
+    internal static Cell CreateCell(Coord coord, bool hasFloor = true)
     {
-        var cell = new Cell(coord, cellBelow)
-        {
-            _material = Material.Dirt,
-        };
+        var cell = new Cell(coord, hasFloor);
         return cell;
     }
-
-    internal static Cell CreateDefaultAir(Coord coord, Cell? cellBelow)
-    {
-        var cell = new Cell(coord, cellBelow)
-        {
-            _material = Material.Air,
-        };
-        return cell;
-    }
-
-    public bool HasFloor => _material == Material.Air && _cellBelow?._material.IsSolid() == true;
 }

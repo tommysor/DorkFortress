@@ -28,27 +28,17 @@ public sealed class Fortress
     private void Initialize()
     {
         // Create a bunch of ground cells
-        for (var z = -5; z < 2; z++)
+        for (var z = 0; z < 1; z++)
         {
             for (var x = MinWestEast; x < MaxWestEast; x++)
             {
                 for (var y = MinNorthSouth; y < MaxNorthSouth; y++)
                 {           
                     var coord = new Coord(x, y, z);
-                    _cells.TryGetValue(new Coord(x, y, z - 1), out var cellBelow);
-                    _cells.Add(coord, Cell.CreateDefaultGround(coord, cellBelow));
+                    _cells.Add(coord, Cell.CreateCell(coord, hasFloor: true));
                 }
             }
         }
-        // Create a top layer of air cells
-        for (var x = MinWestEast; x < MaxWestEast; x++)
-        {
-            for (var y = MinNorthSouth; y < MaxNorthSouth; y++)
-            {           
-                var coord = new Coord(x, y, 2);
-                _cells.TryGetValue(new Coord(x, y, 1), out var cellBelow);
-                _cells.Add(coord, Cell.CreateDefaultAir(coord, cellBelow));
-            }
-        }
+        
     }
 }
